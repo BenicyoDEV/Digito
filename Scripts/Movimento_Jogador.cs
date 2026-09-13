@@ -394,6 +394,14 @@ public void ResetarJogador()
 
     StopCoroutine(nameof(ResetarDano));
     StopCoroutine(nameof(Invencibilidade));
+    
+    
+    
+        BalaoDialogoJogador balaoDialogoJogador = GetComponentInChildren<BalaoDialogoJogador>(true);
+        if (balaoDialogoJogador != null)
+        {
+        balaoDialogoJogador.ResetarEstado();
+        }
 }
 
  

@@ -46,8 +46,6 @@ public void DesativarRaposa()
 {
 	ativou = false;
 	raposa.SetActive(false);
-	
-	Debug.Log("2");
 }
 
 

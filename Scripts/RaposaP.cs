@@ -157,7 +157,6 @@ transform.localRotation = rotacaoInicial;
     if (raposaat != null)
     {
     raposaat.DesativarRaposa();
-    Debug.Log("1");
     }
 }
     

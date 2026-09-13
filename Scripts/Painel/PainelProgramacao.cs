@@ -49,6 +49,7 @@ public LayerMask playerLayer;
 
 [SerializeField] private GameObject corpoDigito;
 [SerializeField] private GameObject olhoDigito;
+[SerializeField] private GameObject esqueletoDigito;
 
 [SerializeField] private CinemachineVirtualCamera cameraPainel;
 [SerializeField] private CinemachineFreeLook freeLook;
@@ -77,6 +78,7 @@ public LayerMask playerLayer;
 private Movimento_Jogador jogador;
 private TransicaoIris transicao;
 private Pausa pausa;
+private BalaoDialogoJogador balaoDialogoJogador;
 
 
     // Start is called before the first frame update
@@ -84,6 +86,7 @@ private Pausa pausa;
     {
         transicao = FindObjectOfType<TransicaoIris>();
         pausa = FindObjectOfType<Pausa>();
+        balaoDialogoJogador = FindObjectOfType<BalaoDialogoJogador>(true);
 
     
         if (idPainel == 1)
@@ -2400,8 +2403,16 @@ if (!digitandoPainelSete.Contains("mushroomVirus"))
     cameraPainel.Priority = 20;
     freeLook.Priority = 10;
         
+                    if (balaoDialogoJogador != null)
+        {
+        balaoDialogoJogador.ResetarEstado();
+        }
+        
     corpoDigito.SetActive(false);
     olhoDigito.SetActive(false);
+    esqueletoDigito.SetActive(false);
+
+    
     
     jogador.controller.enabled = false;
     jogador.animator.enabled = false;
@@ -2500,6 +2511,8 @@ if (!digitandoPainelSete.Contains("mushroomVirus"))
     
     corpoDigito.SetActive(true);
     olhoDigito.SetActive(true);
+    esqueletoDigito.SetActive(true);
+    
     
     jogador.controller.enabled = true;
     jogador.animator.enabled = true;

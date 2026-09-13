@@ -212,6 +212,20 @@ public IEnumerator AtivarDialogoRaposa()
 	balaoAtivado = false;
 }
 
+public void ResetarEstado()
+{
+    StopAllCoroutines();
+
+    respostaRaposa = null;
+    balaoAtivado = false;
+    areaResposta = false;
+    areaRespostaRaposa = false;
+
+    balao.SetActive(false);
+    
+    Debug.Log("balaoAtivado: "+ balaoAtivado);
+    Debug.Log("balao ativo: "+ balao.activeSelf);
+}
 
 
 }
