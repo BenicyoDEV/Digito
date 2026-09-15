@@ -99,7 +99,7 @@ public class Holograma : MonoBehaviour
         EntrarModoProgramacao();
         }
         else
-        {
+        {int layerIgnorar = LayerMask.GetMask("ignorarClick", "Waypoint");
         SairModoProgramacao();
         }
         
@@ -153,7 +153,7 @@ if (Input.GetKeyDown(KeyCode.DownArrow))
         {
         Ray raio = Camera.main.ScreenPointToRay(Input.mousePosition); //um laser q sai da camera e vai onde ta o mouse
         
-    int layerIgnorar = LayerMask.GetMask("ignorarClick");
+    int layerIgnorar = LayerMask.GetMask("ignorarClick", "WayPoint");
     int mascara = ~layerIgnorar;
 
     RaycastHit[] hits = Physics.RaycastAll(raio, Mathf.Infinity, mascara);

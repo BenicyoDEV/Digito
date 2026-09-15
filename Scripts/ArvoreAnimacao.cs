@@ -13,11 +13,22 @@ public bool boolVidaInicial;
 [SerializeField] public Collider colisaoTriggerViva;
 [SerializeField] public GameObject raspRecompensa;
 
+private GameObject areaImpedir;
+private GameObject areaImpedirViva;
+
+
+
     // Start is called before the first frame update
     void Start()
     {
         anim = GetComponent<UnityEngine.Animator>();
         anim.SetFloat("variacaoVida", variacaoVida);
+        
+		areaImpedir = transform.Find("ImpedeJavali")?.gameObject;
+		areaImpedirViva = transform.Find("ImpedeJavaliViva")?.gameObject;
+     areaImpedir.SetActive(false);
+	 areaImpedirViva.SetActive(false); 
+
         
           if (raspRecompensa != null)
 	 {
@@ -35,6 +46,8 @@ public bool boolVidaInicial;
 	 anim.SetBool("estaViva", true);
 	 colisaoTrigger.enabled = false;
 	 colisaoTriggerViva.enabled = true;
+	 areaImpedir.SetActive(false);//
+	 areaImpedirViva.SetActive(true);
 	 
 	
 	 Invoke(nameof(AparecerRec), 2.82f);
@@ -45,6 +58,8 @@ public bool boolVidaInicial;
 	 anim.SetBool("estaViva", false);
 	 colisaoTrigger.enabled = true;
 	 colisaoTriggerViva.enabled = false;
+	 areaImpedir.SetActive(true);//
+	 areaImpedirViva.SetActive(false);
 	 
 	Invoke(nameof(DesaparecerRec), 0.3f);
 	  
