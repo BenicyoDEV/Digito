@@ -153,7 +153,7 @@ if (Input.GetKeyDown(KeyCode.DownArrow))
         {
         Ray raio = Camera.main.ScreenPointToRay(Input.mousePosition); //um laser q sai da camera e vai onde ta o mouse
         
-    int layerIgnorar = LayerMask.GetMask("ignorarClick", "WayPoint");
+    int layerIgnorar = LayerMask.GetMask("ignorarClick", "WayPoint", "impedeJavali");
     int mascara = ~layerIgnorar;
 
     RaycastHit[] hits = Physics.RaycastAll(raio, Mathf.Infinity, mascara);
@@ -348,6 +348,113 @@ foreach (RaycastHit hit in hits)
 	CodigoInvalido();
 	return;
 	}
+	
+if (codigoDoJogador.Contains("+="))
+{
+	string[] partesVec = codigoDoJogador.Split("+="); //no sinal de igual ira separar a string em duas partes, antes"partes[0]" e dps"partes[1]" do "="
+	if (partesVec.Length != 2) //se separar em partes diferentes de 2, cancela
+	{
+	CodigoInvalido();
+	return;
+	} 
+	campo = partesVec[0]; //campo e valor recebem as duas partes, exemplo: "speed"
+	valor = partesVec[1]; //exemplo: "5f;"
+	campo = campo.Trim(); //tira os espaços antes dos extremos
+	if (!valor.Contains(";")) //se não tiver ";" cancela
+	{
+	CodigoInvalido();
+	return;
+	}
+	valor = valor.TrimEnd(); //tira os espaços do final
+	if (valor.Split(';').Length - 1 > 1) //se tiver mais de um ;, cancela.
+	{
+CodigoInvalido();
+	return;
+	}
+	if(valor.EndsWith(";")) //se acaba com ;
+	{
+	valor = valor.Replace(";", ""); //tira os pontos e virgulas
+	valor = valor.TrimEnd();//tira todos os espaços que sobraram no final.
+	}
+	else //se nao acabar com ; entao cancela
+	{
+CodigoInvalido();
+	return;
+	}
+	if (valor.TrimStart().StartsWith("new"))
+	{
+	if (valor.Contains(" f") || valor.Contains(" F"))
+	{
+	CodigoInvalido();
+	return;
+	}
+	valor = valor.Replace(" ", ""); //tirar todos os espaços ex:newVector3(1,2,3)
+	if (valor.Contains("newVector3")) //se ficar sem espaços e escrito newVector3, então vem método.
+	{
+	InterpretadorVector();
+	return;
+	}
+	else
+	{
+	CodigoInvalido();
+	return;
+	}
+	}
+}
+
+if (codigoDoJogador.Contains("-="))
+{
+	string[] partesVec = codigoDoJogador.Split("-="); //no sinal de igual ira separar a string em duas partes, antes"partes[0]" e dps"partes[1]" do "="
+	if (partesVec.Length != 2) //se separar em partes diferentes de 2, cancela
+	{
+	CodigoInvalido();
+	return;
+	} 
+	campo = partesVec[0]; //campo e valor recebem as duas partes, exemplo: "speed"
+	valor = partesVec[1]; //exemplo: "5f;"
+	campo = campo.Trim(); //tira os espaços antes dos extremos
+	if (!valor.Contains(";")) //se não tiver ";" cancela
+	{
+	CodigoInvalido();
+	return;
+	}
+	valor = valor.TrimEnd(); //tira os espaços do final
+	if (valor.Split(';').Length - 1 > 1) //se tiver mais de um ;, cancela.
+	{
+CodigoInvalido();
+	return;
+	}
+	if(valor.EndsWith(";")) //se acaba com ;
+	{
+	valor = valor.Replace(";", ""); //tira os pontos e virgulas
+	valor = valor.TrimEnd();//tira todos os espaços que sobraram no final.
+	}
+	else //se nao acabar com ; entao cancela
+	{
+CodigoInvalido();
+	return;
+	}
+	if (valor.TrimStart().StartsWith("new"))
+	{
+	if (valor.Contains(" f") || valor.Contains(" F"))
+	{
+	CodigoInvalido();
+	return;
+	}
+	valor = valor.Replace(" ", ""); //tirar todos os espaços ex:newVector3(1,2,3)
+	if (valor.Contains("newVector3")) //se ficar sem espaços e escrito newVector3, então vem método.
+	{
+	InterpretadorVector(true);
+	return;
+	}
+	else
+	{
+	CodigoInvalido();
+	return;
+	}
+	}
+}
+	
 	string[] partes = codigoDoJogador.Split('='); //no sinal de igual ira separar a string em duas partes, antes"partes[0]" e dps"partes[1]" do "="
 	if (partes.Length != 2) //se separar em partes diferentes de 2, cancela
 	{
@@ -385,25 +492,6 @@ CodigoInvalido();
 	return;
 	}
 	
-	if (valor.TrimStart().StartsWith("new"))
-	{
-	if (valor.Contains(" f") || valor.Contains(" F"))
-	{
-	CodigoInvalido();
-	return;
-	}
-	valor = valor.Replace(" ", ""); //tirar todos os espaços ex:newVector3(1,2,3)
-	if (valor.Contains("newVector3")) //se ficar sem espaços e escrito newVector3, então vem método.
-	{
-	InterpretadorVector();
-	return;
-	}
-	else
-	{
-	CodigoInvalido();
-	return;
-	}
-	}
 	 
 	if (valor.Contains("true") || valor.Contains("false")) //se conter "true" ou "false" na variavel valor
 	{
@@ -605,7 +693,7 @@ CodigoInvalido();
 	objetoSelecionado.Alterar(campo, booleano);
 	}
 	
-	private void InterpretadorVector() //newVector3(1,2,3)
+	private void InterpretadorVector(bool negativo = false) //newVector3(1,2,3)
 	{
 	valor = valor.Substring(10); //tiras as 10 primeiras letras, ex: (1,2,3)
 	if(valor.StartsWith("(") && valor.EndsWith(")")) //se começar e encerrar com (), remova-os, caso não, cancele.
@@ -632,6 +720,7 @@ CodigoInvalido();
 	vector1 = partesVector[0]; //ex: 5.5f
 	vector2 = partesVector[1]; //ex: 5f
 	vector3 = partesVector[2]; //ex: 5
+	
 
 float x;
 float y; //declaração de variaveis
@@ -655,7 +744,15 @@ if (!ConverterFloat(vector3, out z, false))
 	return;
 }
 
+if (negativo)
+{
+x = x * -1;
+y = y * -1;
+z = z * -1;
+}
+
 Vector3 vetor = new Vector3(x, y, z);
+
 
 Debug.Log("Campo: " + campo);
 Debug.Log("x: " + x);
