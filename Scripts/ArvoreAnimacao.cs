@@ -16,6 +16,8 @@ public bool boolVidaInicial;
 private GameObject areaImpedir;
 private GameObject areaImpedirViva;
 
+public bool boolVidaAnterior;
+
 
 
     // Start is called before the first frame update
@@ -26,9 +28,12 @@ private GameObject areaImpedirViva;
         
 		areaImpedir = transform.Find("ImpedeJavali")?.gameObject;
 		areaImpedirViva = transform.Find("ImpedeJavaliViva")?.gameObject;
+		
+	if (areaImpedir != null && areaImpedirViva != null)
+	{
      areaImpedir.SetActive(false);
 	 areaImpedirViva.SetActive(false); 
-
+	}
         
           if (raspRecompensa != null)
 	 {
@@ -36,39 +41,68 @@ private GameObject areaImpedirViva;
 	 }
 	 
 	 boolVidaInicial = boolVida;
+	 boolVidaAnterior = boolVida;
     }
 
     // Update is called once per frame
     void Update()
-    {
+{
+
 	if (boolVida)
-	{
+	{	
 	 anim.SetBool("estaViva", true);
 	 colisaoTrigger.enabled = false;
 	 colisaoTriggerViva.enabled = true;
-	 areaImpedir.SetActive(false);//
-	 areaImpedirViva.SetActive(true);
 	 
-	
-	 Invoke(nameof(AparecerRec), 2.82f);
-	 
-	}
-	else
+	if (areaImpedir != null && areaImpedirViva != null)
 	{
+	 areaImpedir.SetActive(false);
+	 areaImpedirViva.SetActive(true);
+	}
+	
+	 //Invoke(nameof(AparecerRec), 2.82f); 
+	}
+	
+	else
+	{	
 	 anim.SetBool("estaViva", false);
 	 colisaoTrigger.enabled = true;
 	 colisaoTriggerViva.enabled = false;
-	 areaImpedir.SetActive(true);//
-	 areaImpedirViva.SetActive(false);
 	 
-	Invoke(nameof(DesaparecerRec), 0.3f);
+	if (areaImpedir != null && areaImpedirViva != null)
+	{
+	 areaImpedir.SetActive(true);
+	 areaImpedirViva.SetActive(false);
+	}
+	 
+	//Invoke(nameof(DesaparecerRec), 0.3f);
 	  
 	}
-    }
+	
+	
+		//só agenda o Invoke quando o estado MUDA, não todo frame
+	if (boolVida != boolVidaAnterior)
+	{
+	    CancelInvoke(nameof(AparecerRec));
+	    CancelInvoke(nameof(DesaparecerRec));
+
+	    if (boolVida)
+	    {
+	        Invoke(nameof(AparecerRec), 2.82f);
+	    }
+	    else
+	    {
+	        Invoke(nameof(DesaparecerRec), 0.3f);
+	    }
+
+	    boolVidaAnterior = boolVida;
+	}
+	
+}
     
      private void AparecerRec()
 	 {
-	   if (raspRecompensa != null)
+	   if (raspRecompensa != null && boolVida)
 	 {
 	 raspRecompensa.SetActive(true);
 	 }
@@ -76,12 +110,14 @@ private GameObject areaImpedirViva;
 	 
 	      private void DesaparecerRec()
 	 {
-	  
-	   if (raspRecompensa != null)
+	   if (raspRecompensa != null && !boolVida)
 	 {
 	 raspRecompensa.SetActive(false);
 	 }
 	 }
+	 
+	 
+	 
 	 
 	 public void RestaurarRegiao()
 	 {
@@ -126,6 +162,16 @@ private GameObject areaImpedirViva;
 	 public void ResetarEstado()
 {
 boolVida = boolVidaInicial;
+boolVidaAnterior = boolVidaInicial;
+
+CancelInvoke(nameof(AparecerRec));
+CancelInvoke(nameof(DesaparecerRec));
+
+if (raspRecompensa != null)
+{
+    raspRecompensa.SetActive(boolVidaInicial);
+}
+
 }
 
     
