@@ -50,6 +50,10 @@ public class Movimento_Jogador : MonoBehaviour
 	    private CheckPoint checkpoint;
 	    private ZonaReset zona;
 	    
+	    public float tempoParado = 0f;
+	    
+	    public float forcaMovimento = 0f;
+	    
 	    
 
 
@@ -85,7 +89,14 @@ public class Movimento_Jogador : MonoBehaviour
         float vertical = Input.GetAxis("Vertical");
         bool caindoAgora = !estaNoChao && forcaY < 0;
         
+        tempoParado += Time.deltaTime;
         
+        if (tempoParado >= 20)
+        {
+        animator.SetTrigger("Dancou");
+        tempoParado = -20;
+        }
+         
                 
         //estaNoChao = Physics.CheckSphere(peDoPersonagem.position, 0.5f, colisaoLayer);
    
@@ -97,6 +108,7 @@ estaNoChao = Physics.SphereCast(peDoPersonagem.position,0.4f,Vector3.down,out hi
         if (caindoAgora && !estavaCaindo)
         {
         animator.SetTrigger("IniciarQueda");
+        tempoParado = 0f;
         }
         
         animator.SetBool("Caindo", caindoAgora);
@@ -127,7 +139,8 @@ estaNoChao = Physics.SphereCast(peDoPersonagem.position,0.4f,Vector3.down,out hi
         //controller.Move(movimento * Time.deltaTime * 8);
         
         Vector3 movimentoFinal = movimento + knockback;
-        controller.Move(movimentoFinal * Time.deltaTime * 8);
+        
+        controller.Move(movimentoFinal * Time.deltaTime * (8+forcaMovimento));
         
         knockback = Vector3.Lerp(knockback, Vector3.zero, Time.deltaTime * 5f);
         
@@ -135,7 +148,16 @@ estaNoChao = Physics.SphereCast(peDoPersonagem.position,0.4f,Vector3.down,out hi
         if(movimento != Vector3.zero)
         {
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movimento), Time.deltaTime * 10);
+        tempoParado = 0f;
+        forcaMovimento += (0.5f * Time.deltaTime);
+        if (forcaMovimento > 4)
+        {
+        forcaMovimento = 4;
         }
+        
+        }
+        else
+        forcaMovimento = 0f;
         
         animator.SetBool("Mover", movimento != Vector3.zero);
 
@@ -155,6 +177,7 @@ estaNoChao = Physics.SphereCast(peDoPersonagem.position,0.4f,Vector3.down,out hi
 	if (!estaNoChao)
 	{
 		animator.SetBool("EstaNoChao", estaNoChao);
+		tempoParado = 0f;
 	}
 	
 	
@@ -394,6 +417,10 @@ public void ResetarJogador()
 
     StopCoroutine(nameof(ResetarDano));
     StopCoroutine(nameof(Invencibilidade));
+    
+    tempoParado = 0f;
+	forcaMovimento = 0f;
+	    
     
     
     
