@@ -323,6 +323,7 @@ Vector3 direcao = (detector.player.position - transform.position).normalized;
   	  cancelaMovimento = false;
   dandoDash = false;
   preparandoDash = false;
+  preparandoPreparandoDash = false;
   	yield break;
   	}
   	
@@ -335,10 +336,12 @@ Vector3 direcao = (detector.player.position - transform.position).normalized;
   cancelaMovimento = false;
   dandoDash = false;
   preparandoDash = false;
+  preparandoPreparandoDash = false;
   yield break;
   }
     if (morto) //se o javali morre
   {
+  preparandoPreparandoDash = false;
   yield break;
   }
 
@@ -351,6 +354,7 @@ Vector3 direcao = (detector.player.position - transform.position).normalized;
  cancelaMovimento = true; //cancela todos os movimentos do javali
      if (morto) //se o javali morre
   {
+  preparandoPreparandoDash = false;
   yield break;
   }
   
@@ -359,6 +363,7 @@ Vector3 direcao = (detector.player.position - transform.position).normalized;
    if (morto) //se o javali morre
   {
      animator.SetBool("emDash", false);
+     preparandoPreparandoDash = false;
   yield break;
   }
   
@@ -519,6 +524,8 @@ danoScript.enabled = false;
 
 public void RetornarWayPointProximo()
 {
+
+
 //se nao estiver nenhum waypoint proximo, cancela.
 if(waypointAlvo == null)
 {
@@ -542,6 +549,7 @@ float distancia = Vector3.Distance(transform.position, waypointAlvo.position);
 if(distancia < 1.5f)
 {
     voltandoWayPoint = false;
+    waypointAlvo = null;
 }
 
 }
@@ -682,6 +690,11 @@ private IEnumerator RecalcularWaypoint()
 	voltandoWayPoint = true;
 }
 */
+
+public Transform ObterWaypointAlvo()
+{
+    return waypointAlvo;
+}
 
     
  

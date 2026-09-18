@@ -376,6 +376,13 @@ if (!parado)
      {
         return;
      }
+     
+         if (!detector.perseguindo || morto || !boolMovimento)
+    {
+        preparandoDash = false;
+        return;
+    }
+    
     posicaoAlvo = detector.player.transform.position;
     StartCoroutine(Dash1());
 
@@ -387,12 +394,14 @@ if (!parado)
     {
             if (morto)
   {
+  preparandoDash = false;
   yield break;
   }
   
   
           if (!boolMovimento)
   {
+  preparandoDash = false;
   yield break;
   }
   
@@ -617,6 +626,7 @@ float distancia = Vector3.Distance(transform.position, waypointAlvo.position);
 if(distancia < 1.5f)
 {
     voltandoWayPoint = false;
+    waypointAlvo = null;
 }
 
 }
@@ -762,6 +772,11 @@ private IEnumerator RecalcularWaypointDepoisDoReset()
     yield return null;
 
     voltandoWayPoint = false;
+}
+
+public Transform ObterWaypointAlvo()
+{
+    return waypointAlvo;
 }
 
 }

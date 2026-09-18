@@ -8,6 +8,7 @@ public class JavaliDetectaWayPointProximo : MonoBehaviour
 private Movimento_inimigo javali;
 private List<Transform> waypoints = new List<Transform>();
 
+
 // Start is called before the first frame update
 void Start()
 {
@@ -17,11 +18,16 @@ void Start()
 // Update is called once per frame
 void Update()
 {
-    Transform maisProximo = PegarWaypointMaisProximo();
+    Transform atual = javali.ObterWaypointAlvo();
 
-    if (maisProximo != null)
+    //só recalcula se não tiver alvo ainda, ou se o alvo atual saiu do trigger
+    if (atual == null || !waypoints.Contains(atual))
     {
-        javali.DefinirWaypoint(maisProximo);
+        Transform maisProximo = PegarWaypointMaisProximo();
+        if (maisProximo != null)
+        {
+            javali.DefinirWaypoint(maisProximo);
+        }
     }
 }
 

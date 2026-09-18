@@ -13,18 +13,20 @@ public class DetectaWPPoximo : MonoBehaviour
     }
 
     // Update is called once per frame
-      void Update()
-    {
-         Transform maisProximo =
-    PegarWaypointMaisProximo();
+void Update()
+{
+    Transform atual = passaro.ObterWaypointAlvo();
 
-    if(maisProximo != null)
+    // só recalcula se não tiver alvo, ou se o alvo saiu do trigger
+    if (atual == null || !waypoints.Contains(atual))
     {
-        passaro.DefinirWaypoint(maisProximo);
+        Transform maisProximo = PegarWaypointMaisProximo();
+        if (maisProximo != null)
+        {
+            passaro.DefinirWaypoint(maisProximo);
+        }
     }
-
-    
-    }
+}
     
 private void OnTriggerEnter(Collider other)
 {
