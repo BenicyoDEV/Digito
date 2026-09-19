@@ -7,16 +7,33 @@ public class DetectaPlayer : MonoBehaviour
 	public bool perseguindo;
 	private Movimento_passaro passaro;
 	public Transform player; //referencia para o player
+	
+		private PainelProgramacao[] paineis;
+	public bool algumPainelAtivo = false; 
     // Start is called before the first frame update
     void Start()
     {
          passaro = GetComponentInParent<Movimento_passaro>();
+             	paineis = FindObjectsOfType<PainelProgramacao>();
     }
 
     // Update is called once per frame
     void Update()
     {
+            	algumPainelAtivo = false;
+        foreach (PainelProgramacao painel in paineis)
+        {
+        if (painel.programandoPainel)
+        {
+		algumPainelAtivo = true;
+		}
+        }
         
+        if (perseguindo && algumPainelAtivo)
+        {
+        perseguindo = false;
+        passaro.voltandoWayPoint = true;
+        }
     }
     
       private void OnTriggerEnter(Collider other)

@@ -9,6 +9,8 @@ private Vector3[] posicoes;
 private Quaternion[] rotacoes;
 private Transform[] filhos;
 
+
+	private CameraShake shake;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,7 +26,8 @@ private Transform[] filhos;
 	posicoes[i] = filhos[i].position;
 	rotacoes[i] = filhos[i].rotation;
 	}*/
-	
+	shake = FindObjectOfType<CameraShake>();
+
 	filhos = GetComponentsInChildren<Transform>(true);
 	
 	posicoes = new Vector3[filhos.Length];
@@ -121,6 +124,9 @@ public void ResetarZona()
         RaposaP raposa = filhos[i].GetComponent<RaposaP>();
         if (raposa != null)
         raposa.ResetarEstado();
+        
+        shake.reset = true;
+        
     }
 }
 

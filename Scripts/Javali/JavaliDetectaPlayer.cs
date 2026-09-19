@@ -8,18 +8,34 @@ public class JavaliDetectaPlayer : MonoBehaviour
 	private Movimento_inimigo javali;
 	public Transform player;
 	public bool perseguindo;
+	private PainelProgramacao[] paineis;
+	public bool algumPainelAtivo = false; 
 
 
     // Start is called before the first frame update
     void Start()
     {
+    	paineis = FindObjectsOfType<PainelProgramacao>();
        javali = GetComponentInParent<Movimento_inimigo>();
     }
 
     // Update is called once per frame
     void Update()
     {
+    	algumPainelAtivo = false;
+        foreach (PainelProgramacao painel in paineis)
+        {
+        if (painel.programandoPainel)
+        {
+		algumPainelAtivo = true;
+		}
+        }
         
+        if (perseguindo && algumPainelAtivo)
+        {
+        perseguindo = false;
+        javali.voltandoWayPoint = true;
+        }
     }
     
         private void OnTriggerEnter(Collider other)
@@ -31,6 +47,7 @@ public class JavaliDetectaPlayer : MonoBehaviour
         javali.voltandoWayPoint = false;
         }
     }
+    
     
       private void OnTriggerExit(Collider other)
     {
