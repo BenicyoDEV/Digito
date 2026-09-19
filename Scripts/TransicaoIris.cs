@@ -102,7 +102,7 @@ public class TransicaoIris : MonoBehaviour
               Time.timeScale = 1f;
     freeLook.m_XAxis.m_MaxSpeed = MaxX;
     freeLook.m_YAxis.m_MaxSpeed = MaxY;
-       yield return new WaitForSecondsRealtime(2.15f);
+       yield return new WaitForSecondsRealtime(2.6f); //qualquer coisa, aumentar esse
           fundoPreto.SetActive(false);
     }
     
