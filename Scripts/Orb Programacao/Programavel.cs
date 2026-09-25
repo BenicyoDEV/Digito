@@ -457,6 +457,23 @@ raposa.boolGravidade = booleano;
     }
 }
 
+else if (campo == "gizmo.enabled")
+{
+
+if (booleano == true)
+{
+holograma.CodigoValido();
+holograma.hudGizmo.SetActive(true);
+}
+else
+{
+holograma.CodigoValido();
+holograma.hudGizmo.SetActive(false);
+}
+
+}
+
+
     else 
     {
     holograma.CodigoInvalido();

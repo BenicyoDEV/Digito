@@ -2480,7 +2480,7 @@ if (!digitandoPainelSete.Contains("mushroomVirus"))
     {
     inputCodPainel.text = PegarLinha(codigo3dPainel.text, 2);
     canvaPainelFundo.anchoredPosition = new Vector2(canvaPainelFundo.anchoredPosition.x, 112f);
-    canvaPainelTexto.anchoredPosition = new Vector2(canvaPainelTexto.anchoredPosition.x, -39.9f); 
+    canvaPainelTexto.anchoredPosition = new Vector2(canvaPainelTexto.anchoredPosition.x, -39.9f); ///esse
     }
         
     }

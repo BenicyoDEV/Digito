@@ -12,6 +12,7 @@ public class Holograma : MonoBehaviour
 	public bool modoProgramacao;
 	public bool digitandoCodigo;
 	[SerializeField] private GameObject holograma;
+	[SerializeField] private GameObject orbClara;
 	[SerializeField] private CinemachineFreeLook freeLook;
 	//[SerializeField] private Camera camerajogador;
 	[SerializeField] private GameObject painelProgramacao;
@@ -27,6 +28,10 @@ public class Holograma : MonoBehaviour
 	[SerializeField] private TextMeshProUGUI codigoErro;
 	[SerializeField] private TextMeshProUGUI objetoLonge;
 	[SerializeField] private TextMeshProUGUI objetoInvalido;
+	
+	[SerializeField] public GameObject hudGizmo;
+	
+	
 	
 	private string campo;
 	private string valor;
@@ -87,6 +92,7 @@ public class Holograma : MonoBehaviour
         digitandoCodigo = false;
 	modoProgramacao = false;
 	holograma.SetActive(false);
+	orbClara.SetActive(false);
     }
     
         if (!digitandoCodigo && objetoSelecionado == null)
@@ -199,6 +205,7 @@ foreach (RaycastHit hit in hits)
 
         painelProgramacao.SetActive(true);
         holograma.SetActive(true);
+        orbClara.SetActive(true);
 
         inputCodigo.text = "";
         inputCodigo.ActivateInputField();
@@ -317,9 +324,31 @@ foreach (RaycastHit hit in hits)
 	
 	//interpretador de codigo.
 	codigoDoJogador = codigoDoJogador.Trim();
-	if (codigoDoJogador != "")
+    if (codigoDoJogador != "")
 	{
 	AdicionarHistorico(codigoDoJogador);
+	}
+	if (codigoDoJogador.StartsWith("gizmo.enabled"))
+	{
+	campo = codigoDoJogador.Substring(0, 13);
+	codigoDoJogador = codigoDoJogador.Substring(13);
+	codigoDoJogador = codigoDoJogador.Trim();
+	if (codigoDoJogador.StartsWith("="))
+	{
+	codigoDoJogador = codigoDoJogador.Substring(1);
+	codigoDoJogador = codigoDoJogador.Trim();
+	if (codigoDoJogador.EndsWith(";"))
+	{
+	codigoDoJogador = codigoDoJogador.Substring(0, codigoDoJogador.Length - 1);
+	codigoDoJogador = codigoDoJogador.Trim();
+	valor = codigoDoJogador;
+    if (valor == "true" || valor == "false")//se só sobrar "true" ou "false" inicia método InterpretadorBool.
+	{
+	InterpretadorBool();
+	return;
+	}
+	}
+	}
 	}
 	if (codigoDoJogador == "exit;" || codigoDoJogador == "exit();")
 	{
@@ -787,6 +816,7 @@ private void LimparSelecao()
 	modoProgramacao = false;
 	Time.timeScale = 1f;
 	holograma.SetActive(false);
+	orbClara.SetActive(false);
 	
 	Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
