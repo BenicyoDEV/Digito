@@ -116,10 +116,10 @@ estaNoChao = Physics.SphereCast(peDoPersonagem.position,0.4f,Vector3.down,out hi
         estavaCaindo = caindoAgora;
         
         
-        if (estaNoChao)
-        {
-        pulosRestantes = 1;
-        }
+if (estaNoChao && forcaY <= 0f)
+{
+pulosRestantes = 2;
+}
         
  
         
