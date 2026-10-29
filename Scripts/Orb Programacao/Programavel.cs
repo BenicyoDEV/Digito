@@ -351,7 +351,6 @@ passaro.gameObject.layer = LayerMask.NameToLayer("Default");
 else if (cenario != null)
     {
 cenario.colisao.enabled = booleano;
-cenario.colisaoPisavel.enabled = booleano;
 if (!booleano)
 {
 cenario.gameObject.layer = LayerMask.NameToLayer("semColisao");
