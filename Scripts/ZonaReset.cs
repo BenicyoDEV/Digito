@@ -125,6 +125,18 @@ public void ResetarZona()
         if (raposa != null)
         raposa.ResetarEstado();
         
+        BALAORaposa balaoRaposa = filhos[i].GetComponent<BALAORaposa>();
+		if (balaoRaposa != null)
+  		  balaoRaposa.ResetarEstado();
+
+		Raposa raposaScript = filhos[i].GetComponent<Raposa>();
+		if (raposaScript != null)
+ 		   raposaScript.ResetarEstado();
+
+		RaposaAtivacao ativacao = filhos[i].GetComponent<RaposaAtivacao>();
+		if (ativacao != null)
+ 	   ativacao.ResetarEstado();
+        
         shake.reset = true;
         
     }

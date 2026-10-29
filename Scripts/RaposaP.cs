@@ -18,37 +18,39 @@ public bool boolMovimento = true;
 	private Quaternion rotacaoInicial; 
 	private Vector3 posicaoInicial;
 	
+	
+	private bool iniciou;
+private bool kinematicInicial;
+	
 [SerializeField] private RaposaAtivacao raposaat;
 
     // Start is called before the first frame update
-    void Start()
-    {
-        rb.useGravity = false;
-         animator = GetComponentInChildren<Animator>();
-         
-escalaInicial = transform.localScale;
-rotacaoInicial = transform.localRotation;
-posicaoInicial = transform.localPosition;
-    }
+void Start()
+{
+    rb.useGravity = false;
+    animator = GetComponentInChildren<Animator>(true); // <-- só adicionei o "true"
+
+    escalaInicial = transform.localScale;
+    rotacaoInicial = transform.localRotation;
+    posicaoInicial = transform.localPosition;
+    
+    
+    kinematicInicial = rb.isKinematic;
+iniciou = true;
+}
 
     // Update is called once per frame
-    void Update()
+void Update()
+{
+    if (boolMovimento)
     {
-
-    
-if (boolMovimento)
-{
-
-float volume = (transform.localScale.x * transform.localScale.y * transform.localScale.z) /3f;
-rb.mass = volume * 2f;
- animator.speed = 1f;
-}
-else
-{
- animator.speed = 0f;
-}
-
+        float volume = (transform.localScale.x * transform.localScale.y * transform.localScale.z) / 3f;
+        rb.mass = volume * 2f;
     }
+
+    if (animator != null)
+        animator.speed = boolMovimento ? 1f : 0f;
+}
     
     void FixedUpdate()
 {
@@ -131,33 +133,43 @@ mexendo = false;
     mexendo = false;
     }
     
-    public void ResetarEstado()
+  
+public void ResetarEstado()
 {
+    StopAllCoroutines();
+    CancelInvoke();
 
-StopAllCoroutines();
-CancelInvoke();
+    gravidade = 9.81f;
+    boolGravidade = false;
+    boolMovimento = true;
+    mexendo = false;
 
-gravidade = 9.81f;
-boolGravidade = false;
-boolMovimento = true;
+    colisao.enabled = true;
+    colisao2.enabled = true;
+    gameObject.layer = LayerMask.NameToLayer("Ground");
 
+    if (iniciou)
+    {
+        transform.localPosition = posicaoInicial;
+        transform.localScale = escalaInicial;
+        transform.localRotation = rotacaoInicial;
+    }
+    else
+    {
+        transform.localScale = Vector3.one;
+    }
 
-colisao.enabled = true;
-colisao2.enabled = true;
+    if (rb != null)
+    {
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        rb.isKinematic = iniciou ? kinematicInicial : rb.isKinematic;
+    }
 
-gameObject.layer = LayerMask.NameToLayer("Ground");
-
-mexendo = false;
-
-
-transform.localPosition = posicaoInicial;
-transform.localScale = new Vector3(1,1,1);
-transform.localRotation = rotacaoInicial;
+    if (animator != null) animator.speed = 1f;
 
     if (raposaat != null)
-    {
-    raposaat.DesativarRaposa();
-    }
+        raposaat.DesativarRaposa();
 }
     
 }

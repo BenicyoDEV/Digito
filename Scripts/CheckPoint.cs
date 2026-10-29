@@ -12,12 +12,12 @@ public int idCheck;
 public static int checkAtual;
 [SerializeField] GameObject spawn1;
 [SerializeField] GameObject spawn2;
-[SerializeField] GameObject spawn3;
-[SerializeField] GameObject spawn4;
 
 [SerializeField] private ZonaReset[] zonasParaResetar;
 
 public static ZonaReset[] zonasAtuais;
+
+public bool terSom = true;
 
 public LayerMask playerLayer;
 private Movimento_Jogador jogador;
@@ -66,23 +66,17 @@ private Movimento_Jogador jogador;
         {
 		jogador.transform.position = spawn2.transform.position;
         }
-        
-       	        if (checkAtual == 3)
-        {
-		jogador.transform.position = spawn3.transform.position;
-        }
-        
-       	        if (checkAtual == 4)
-        {
-		jogador.transform.position = spawn4.transform.position;
-        }
+       
     }
     
     
     	public void mensagemCheck()
 	{
 	Debug.Log("Código válido");
+	
+	if (terSom)
 	audioSourceCheckpoint.PlayOneShot(CheckpointAudio);
+	
 	checkpointMensagem.gameObject.SetActive(true);
 	
 	StartCoroutine(desativarMensagemCheck());

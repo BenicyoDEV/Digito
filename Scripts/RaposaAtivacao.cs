@@ -8,6 +8,11 @@ public class RaposaAtivacao : MonoBehaviour
 [SerializeField] GameObject raposa;
 [SerializeField] Animator animator;
 
+public bool jaSpawna;
+
+public bool naoVolta;
+bool naoVoltarMais;
+
 public bool ativou = false;
     // Start is called before the first frame update
     void Start()
@@ -24,7 +29,7 @@ public bool ativou = false;
         
     private void OnTriggerEnter(Collider other)
 {
-if (!ativou)
+if (!ativou && !naoVoltarMais)
 {
 	if (other.CompareTag("Player") )
         {
@@ -37,8 +42,14 @@ if (!ativou)
         raposa.SetActive(true);
         ativou = true;
                 
+       
+        if (!jaSpawna)
         animator.SetTrigger("Invocar");
+        if (naoVolta)
+		naoVoltarMais = true;
 		}
+		
+
 }
 }
 
@@ -48,5 +59,11 @@ public void DesativarRaposa()
 	raposa.SetActive(false);
 }
 
+
+public void ResetarEstado()
+{
+    naoVoltarMais = false;
+    DesativarRaposa(); // ativou = false + raposa.SetActive(false)
+}
 
 }

@@ -1,3 +1,4 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,16 +18,45 @@ public class BalaoDialogoJogador : MonoBehaviour
 	bool areaResposta;
 	bool areaRespostaRaposa;
 	
+	
+	
 	balaoDialogo javali;
 	BALAORaposa raposa;
 	
+	private BALAORaposa falandoCom;
+private bool respondendoFalaLivre;
+	
 	private Coroutine respostaRaposa;
+	
+	private Coroutine respostaFalaLivre;
 	
     // Start is called before the first frame update
     void Start()
     {
     	minhaCamera = GameObject.FindGameObjectWithTag("Camera").transform;
     }
+    
+    void Update()
+{
+    bool mostrarOutros = balaoAtivado &&
+    (
+        (javali != null && javali.balaoAtivado && areaResposta) ||
+        (raposa != null && raposa.balaoAtivado && areaRespostaRaposa)
+    );
+
+    bool mostrarFalaLivre = respondendoFalaLivre &&
+                            falandoCom != null &&
+                            falandoCom.balaoAtivado &&
+                            falandoCom.estaNaAreaBalao;
+
+    balao.SetActive(mostrarOutros || mostrarFalaLivre);
+
+    if (raposa != null && raposa.dialogueDenovo)
+    {
+        respostaRaposa = StartCoroutine(AtivarDialogoRaposa());
+        
+    }
+}
     
     void LateUpdate()
     {
@@ -35,30 +65,68 @@ public class BalaoDialogoJogador : MonoBehaviour
         transform.forward = direcao;
     }
 
-    // Update is called once per frame
-    void Update()
+    
+public void ResponderFalaLivre(BALAORaposa quemFalou, int fala)
+{
+    if (respostaFalaLivre != null)
     {
-if (balaoAtivado && 
-    (
-        (javali != null && javali.balaoAtivado && areaResposta) ||
-        (raposa != null && raposa.balaoAtivado && areaRespostaRaposa)
-    ))
-        {
-        	balao.SetActive(true);
-        }
-        else
-        {
-        	balao.SetActive(false);
-        }
-        
-        
-        if (raposa != null && raposa.dialogueDenovo)
-        {
-        respostaRaposa = StartCoroutine(AtivarDialogoRaposa());
-        }
+        StopCoroutine(respostaFalaLivre);
+        respostaFalaLivre = null;
+        respondendoFalaLivre = false;
     }
-    
-    
+
+    string resposta = PegarRespostaFalaLivre(quemFalou.idRaposa, fala);
+    if (resposta == null) return;
+
+    respostaFalaLivre = StartCoroutine(AtivarRespostaFalaLivre(quemFalou, resposta));
+}
+
+private IEnumerator AtivarRespostaFalaLivre(BALAORaposa quemFalou, string resposta)
+{
+    yield return new WaitForSeconds(3f);
+
+    if (quemFalou == null || !quemFalou.balaoAtivado || !quemFalou.estaNaAreaBalao)
+    {
+        respostaFalaLivre = null;
+        yield break;
+    }
+
+    dialogo3d.text = resposta;
+    falandoCom = quemFalou;
+    respondendoFalaLivre = true;
+    AudioManager.instancia.SomBalao();
+
+    yield return new WaitForSeconds(3.7f);
+
+    respondendoFalaLivre = false;
+    falandoCom = null;
+    respostaFalaLivre = null;
+}
+
+// retorna null quando o Dígito não responde
+private string PegarRespostaFalaLivre(int idRaposa, int fala)
+{
+dialogo3d.fontSize = 26f;
+    if (idRaposa == 1)
+    {
+        if (fala == 1) return "Me chamo Dígito, minha missão é salvar este mundo.";
+        if (fala == 2)
+        {
+        dialogo3d.fontSize = 30f;
+        return "Vírus cogumelos? ok.";
+        }
+        //if (fala == 3) return "...";
+    }
+    else if (idRaposa == 2)
+    {
+        // fala 1: sem resposta
+        //if (fala == 2) return "Entendi!";
+        // fala 3: sem resposta
+    }
+
+    return null;
+}
+
     
     //problema, o dialogo desaparece mas nn conta q eu sai da area dele para o metodo reiniciar.
     private void OnTriggerEnter(Collider other)
@@ -118,6 +186,7 @@ if (balaoAtivado &&
 private IEnumerator AtivarDialogo()
 {
 	yield return new WaitForSeconds(3.5f);
+dialogo3d.fontSize = 36f;
 	
 	balaoAtivado = true;
 		AudioManager.instancia.SomBalao();
@@ -189,26 +258,29 @@ public IEnumerator AtivarDialogoRaposa()
         yield break;
         }
         
+
+
+	
+	if (raposa.idRaposa == 3)
+	{
 	balaoAtivado = true;
 	AudioManager.instancia.SomBalao();
-	
-	if (raposa.idRaposa == 1)
-	{
 	if (raposa.instrucaoUm)
-	dialogo3d.text = "id 1, instrucao 1";
+	dialogo3d.text = "Talvez se eu podesse fazer ficar verdadeira.";
 	else
-	dialogo3d.text = "id 1, instrucao 2";
+	dialogo3d.text = "Devo substituir \">\" por \"<\"! ";
 	}
 	
-	else if (raposa.idRaposa == 2)
+	/*else if (raposa.idRaposa == 2)
 	{
 	if (raposa.instrucaoUm)
 	dialogo3d.text = "id 2, instrucao 1";
 	else
 	dialogo3d.text = "id 2, instrucao 2";
 	}
+	*/
 	
-	yield return new WaitForSeconds(5f);
+	yield return new WaitForSeconds(9f);
 
     respostaRaposa = null;
 	balaoAtivado = false;
@@ -218,16 +290,25 @@ public void ResetarEstado()
 {
     StopAllCoroutines();
 
+    respondendoFalaLivre = false;
+    falandoCom = null;
     respostaRaposa = null;
+    respostaFalaLivre = null;
     balaoAtivado = false;
+
     areaResposta = false;
     areaRespostaRaposa = false;
 
+    raposa = null;
+    javali = null;
+
+
+    dialogo3d.text = "";
+    dialogo3d.fontSize = 26f;
+
     balao.SetActive(false);
-    
-    Debug.Log("balaoAtivado: "+ balaoAtivado);
-    Debug.Log("balao ativo: "+ balao.activeSelf);
 }
 
 
 }
+

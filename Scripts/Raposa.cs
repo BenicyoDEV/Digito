@@ -43,17 +43,7 @@ public class Raposa : MonoBehaviour
             animator.SetTrigger("PararEsconder");
         }
         
-        
-        if (escondendo)
-        {
-        colisao1.enabled = false;
-     //   colisao2.enabled = false;
-        }
-        else
-        {
-        colisao1.enabled = true;
-     //   colisao2.enabled = true;
-        }
+       
 
     }
 
@@ -61,5 +51,18 @@ public class Raposa : MonoBehaviour
     {
         Gizmos.DrawWireSphere(transform.position, raio);
     }
+    
+    
+    public void ResetarEstado()
+{
+    escondendo = false;
+
+    if (animator != null)
+    {
+        animator.ResetTrigger("Esconder");
+        animator.ResetTrigger("PararEsconder");
+    }
+}
+
 }
 

@@ -17,6 +17,8 @@ public class balaoDialogo : MonoBehaviour
 	private bool estaNaAreaBalao;
 	public bool balaoAtivado;
 	public int idDialogo;
+	
+	bool falar = true;
 
     // Start is called before the first frame update
     void Start()
@@ -52,16 +54,18 @@ public class balaoDialogo : MonoBehaviour
         }
         
         
-        if (estaNaAreaBalao)
+        if (estaNaAreaBalao && balaoAtivado)
         {
-        if (balaoAtivado)
-        balao.SetActive(true);
-        else
-        balao.SetActive(false); 
+        	if (!balao.activeSelf)
+        	{
+        		balao.SetActive(true);
+        		
+        		AudioManager.instancia.SomBalao();
+        	}
         }
         else
         {
-        balao.SetActive(false); 
+        balao.SetActive(false);
         }
     }
     
@@ -69,7 +73,6 @@ public class balaoDialogo : MonoBehaviour
     void AtivarBalao()
     {
     	balaoAtivado = true;
-    	AudioManager.instancia.SomBalao();
     	
     	int numero = Random.Range(1, 13);
     	

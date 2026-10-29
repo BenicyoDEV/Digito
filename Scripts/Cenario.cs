@@ -7,7 +7,6 @@ public class Cenario : MonoBehaviour
 
 [SerializeField] public Collider colisao;
 [SerializeField] public Rigidbody rb;
-[SerializeField] public Collider colisaoPisavel;
 
 public bool boolGravidade = false;
 public float gravidade = 9.81f;
@@ -117,7 +116,6 @@ transform.localScale = escalaInicial;
 transform.rotation = rotacaoInicial;
 
 colisao.enabled = true;
-colisaoPisavel.enabled = true;
 
 }
     
